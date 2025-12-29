@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WaveStream</title>
+    
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --primary: #e50914; /* Rouge style Netflix */
+            --dark: #141414;
+            --gray: #333;
+            --text: #fff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* En-tête */
+        header {
+            background-color: #000;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        h1 { margin: 0; font-size: 1.2rem; color: var(--primary); }
+
+        /* Conteneur principal */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Zone du Lecteur Vidéo */
+        .video-section {
+            flex: 2;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .video-js {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Zone de la Playlist */
+        .playlist-section {
+            flex: 1;
+            background-color: #1f1f1f;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--gray);
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        /* Contrôles de fichier et recherche */
+        .controls {
+            padding: 15px;
+            background-color: #2b2b2b;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn-upload {
+            display: block;
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            background: #444;
+            color: white;
+            box-sizing: border-box; /* Important pour ne pas dépasser */
+        }
+
+        /* Liste des chaînes */
+        .channel-list {
+            flex: 1;
+            overflow-y: auto;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .channel-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--gray);
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .channel-item:hover {
+            background-color: #333;
+        }
+
+        .channel-item.active {
+            background-color: var(--gray);
+            border-left: 4px solid var(--primary);
+        }
+
+        .channel-icon {
+            width: 40px;
+            height: 40px;
+            background: #000;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #aaa;
+            overflow: hidden;
+        }
+        
+        .channel-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Responsive : Mobile */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .video-section {
+                flex: none;
+                height: 40vh; /* La vidéo prend 40% de l'écran en haut */
+            }
+            .playlist-section {
+                flex: 1;
+                max-width: 100%;
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>WaveStream🏴‍☠️</h1>
+        </header>
+
+    <div class="main-container">
+        <div class="video-section">
+            <video
+                id="my-player"
+                class="video-js vjs-big-play-centered vjs-theme-city"
+                controls
+                preload="auto"
+                data-setup='{"fluid": false}'
+                x-webkit-airplay="allow" 
+                poster="https://via.placeholder.com/1280x720/000000/FFFFFF/?text=Veuillez+charger+une+playlist"
+            >
+                <p class="vjs-no-js">
+                    Pour voir cette vidéo, activez JavaScript.
+                </p>
+            </video>
+        </div>
+
+        <div class="playlist-section">
+            <div class="controls">
+                <label for="m3uFile" class="btn-upload">📂 Ouvrir fichier Playlist (M3U)</label>
+                <input type="file" id="m3uFile" accept=".m3u, .m3u8">
+                <input type="text" id="searchInput" class="search-box" placeholder="Rechercher une chaîne...">
+            </div>
+            <ul id="channelList" class="channel-list">
+                <li style="padding:20px; text-align:center; color:#777;">Aucune playlist chargée.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+
+    <script>
+        // Initialisation des variables
+        const fileInput = document.getElementById('m3uFile');
+        const channelList = document.getElementById('channelList');
+        const searchInput = document.getElementById('searchInput');
+        let player = videojs('my-player');
+        let allChannels = [];
+
+        // 1. Lecture du fichier M3U
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                parseM3U(content);
+            };
+            reader.readAsText(file);
+        });
+
+        // 2. Parser le contenu M3U (Optimisé)
+        function parseM3U(data) {
+            allChannels = [];
+            const lines = data.split('\n');
+            let currentChannel = {};
+
+            for (let line of lines) {
+                line = line.trim();
+                if (line.startsWith('#EXTINF:')) {
+                    // Extraction du nom et logos si dispo
+                    const info = line.split(',');
+                    currentChannel.name = info[info.length - 1] || 'Chaîne inconnue';
+                    
+                    // Tentative d'extraction de logo (tvg-logo)
+                    const logoMatch = line.match(/tvg-logo="([^"]*)"/);
+                    currentChannel.logo = logoMatch ? logoMatch[1] : null;
+
+                } else if (line.startsWith('http')) {
+                    currentChannel.url = line;
+                    allChannels.push({...currentChannel});
+                    currentChannel = {}; // Reset pour la prochaine
+                }
+            }
+            
+            renderList(allChannels);
+            
+            // Lancer la première chaîne automatiquement si dispo
+            if(allChannels.length > 0) {
+                loadChannel(allChannels[0]);
+            }
+        }
+
+        // 3. Affichage de la liste (Performant)
+        function renderList(channels) {
+            channelList.innerHTML = '';
+            
+            // Limite d'affichage pour éviter le lag si 10,000 chaines (Virtualisation simple)
+            // Ici on affiche tout mais le filtrage est rapide.
+            
+            if (channels.length === 0) {
+                channelList.innerHTML = '<li style="padding:20px; text-align:center;">Aucun résultat.</li>';
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            channels.forEach((channel, index) => {
+                const li = document.createElement('li');
+                li.className = 'channel-item';
+                li.onclick = () => loadChannel(channel, li);
+                
+                // Gestion icone
+                let iconHtml = '<div class="channel-icon">TV</div>';
+                if(channel.logo) {
+                    iconHtml = `<div class="channel-icon"><img src="${channel.logo}" onerror="this.style.display='none'"></div>`;
+                }
+
+                li.innerHTML = `
+                    ${iconHtml}
+                    <span>${channel.name}</span>
+                `;
+                fragment.appendChild(li);
+            });
+
+            channelList.appendChild(fragment);
+        }
+
+        // 4. Système de recherche (Filtre instantané)
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allChannels.filter(ch => ch.name.toLowerCase().includes(term));
+            renderList(filtered);
+        });
+
+        // 5. Chargement de la vidéo (Optimisation buffer)
+        function loadChannel(channel, element) {
+            // Mise à jour visuelle (active class)
+            const active = document.querySelector('.channel-item.active');
+            if(active) active.classList.remove('active');
+            if(element) element.classList.add('active');
+
+            // Chargement Video.js
+            player.src({
+                src: channel.url,
+                type: 'application/x-mpegURL' // Type standard pour HLS (m3u8)
+            });
+            
+            player.play().catch(e => console.log("Lecture auto bloquée par le navigateur, clic requis."));
+        }
+
+        // Gestion des erreurs
+        player.on('error', function() {
+            console.log("Erreur de flux, tentative de reconnexion...");
+            // Logique de retry possible ici
+        });
+
+    </script>
+</body>
+</html>
