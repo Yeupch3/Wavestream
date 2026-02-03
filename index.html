@@ -6,14 +6,62 @@
     <title>Ma Banque Mobile</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Labrador:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Labrador", -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        /* Écran de chargement */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #136b5a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        #loading-logo {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+            background-color: white;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: pulse 1.5s infinite alternate;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #loading-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        #loading-text {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); }
+            100% { transform: scale(1.05); opacity: 1; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); }
         }
         
         body {
@@ -27,20 +75,280 @@
             position: relative;
         }
         
-        /* En-tête simplifié */
-        .header {
-            background-color: #ffffff;
-            padding: 28px 16px 16px;
-            border-bottom: 1px solid #eaeaea;
+        /* Page de connexion avec image de fond floutée */
+        .login-page {
+            background: linear-gradient(rgba(19, 107, 90, 0.8), rgba(19, 107, 90, 0.9)),
+                        url('https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            min-height: 100vh;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
         
-        .greeting {
+        /* Effet de flou sur l'image de fond */
+        .login-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            filter: blur(8px);
+            z-index: 1;
+        }
+        
+        /* Overlay pour améliorer la lisibilité */
+        .login-page::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 2;
+        }
+        
+        /* Contenu de la page de connexion */
+        .login-content {
+            position: relative;
+            z-index: 3;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .login-header {
+            margin-bottom: 60px;
+        }
+        
+        .login-region {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .login-greeting {
             font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .login-account {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 40px;
+        }
+        
+        .account-status {
+            width: 12px;
+            height: 12px;
+            background-color: #ff4444;
+            border-radius: 50%;
+        }
+        
+        .login-btn {
+            background-color: white;
+            color: #136b5a;
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 18px;
             font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .emergency-numbers {
+            margin-top: auto;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 400;
+            opacity: 0.9;
+            padding-top: 30px;
+            position: relative;
+            z-index: 3;
+        }
+        
+        /* Page code PIN */
+        .pin-page {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding: 40px 24px;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .pin-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .pin-account {
+            font-size: 24px;
+            font-weight: 500;
+            color: #333;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        
+        .pin-title {
+            font-size: 18px;
+            font-weight: 400;
+            color: #666;
+        }
+        
+        .pin-input {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 32px;
+            letter-spacing: 10px;
+            font-weight: 500;
+            color: #136b5a;
+        }
+        
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .pin-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ddd;
+        }
+        
+        .pin-dot.active {
+            background-color: #136b5a;
+        }
+        
+        .pin-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .pin-key {
+            background-color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        
+        .pin-key:hover {
+            background-color: #e6f0f1;
+            transform: translateY(-2px);
+        }
+        
+        .pin-key.delete {
+            background-color: #f0f0f0;
+            color: #ff4444;
+        }
+        
+        .forgot-pin {
+            text-align: center;
+            margin-top: 30px;
+            color: #136b5a;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        /* Pages principales (masquées initialement) */
+        .app-container {
+            display: none;
+        }
+        
+        /* Pages */
+        .page {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* En-tête avec notification et retour */
+        .header {
+            background-color: #ffffff;
+            padding: 20px 16px 16px;
+            border-bottom: 1px solid #eaeaea;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-with-back {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .back-btn {
+            color: #136b5a;
+            font-size: 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
             color: #000;
         }
         
-        /* Sections horizontales en haut */
+        .notification-bell {
+            position: relative;
+            font-size: 20px;
+            color: #333;
+            cursor: pointer;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 8px;
+            height: 8px;
+        }
+        
+        /* Sections horizontales en haut (Accueil) */
         .horizontal-sections {
             display: flex;
             background-color: #fff;
@@ -56,6 +364,7 @@
             align-items: center;
             justify-content: center;
             padding: 12px 8px;
+            cursor: pointer;
         }
         
         .section-icon {
@@ -78,26 +387,41 @@
             text-align: center;
         }
         
-        /* Total des comptes */
+        /* Total des comptes (Accueil) */
         .total-section {
             background-color: #fff;
             padding: 20px 16px;
             margin-top: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .total-label {
             font-size: 16px;
             color: #666;
-            margin-bottom: 8px;
+            font-weight: 400;
+        }
+        
+        .total-amount-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .total-amount {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             color: #136b5a;
         }
         
-        /* Compte de dépôt */
+        .eye-icon {
+            color: #666;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        /* Compte de dépôt (Accueil) */
         .deposit-account {
             background-color: #fff;
             padding: 20px 16px;
@@ -106,11 +430,17 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
         
+        .account-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
         .account-title {
             font-size: 16px;
             font-weight: 600;
             color: #136b5a;
-            margin-bottom: 8px;
         }
         
         .account-details {
@@ -124,6 +454,7 @@
             color: #666;
             font-size: 15px;
             font-family: monospace;
+            font-weight: 400;
         }
         
         .account-balance {
@@ -131,7 +462,7 @@
         }
         
         .balance-amount {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: #136b5a;
             display: block;
@@ -140,11 +471,12 @@
         .future-balance {
             color: #666;
             font-size: 14px;
+            font-weight: 400;
             display: block;
             margin-top: 4px;
         }
         
-        /* Actions rapides */
+        /* Actions rapides (Accueil) */
         .quick-actions {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -181,7 +513,7 @@
             font-weight: 500;
         }
         
-        /* Section Pour vous */
+        /* Section Pour vous (Accueil) - Nouvelles images de fond */
         .for-you-section {
             background-color: #fff;
             padding: 20px 16px;
@@ -200,20 +532,39 @@
             border-radius: 10px;
             padding: 18px;
             margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .card-balance {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+        }
+        
+        .card-plafonds {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
         }
         
         .card-title {
             font-weight: 600;
             margin-bottom: 5px;
-            color: #136b5a;
+            color: white;
+            font-size: 18px;
         }
         
         .card-description {
-            color: #666;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 14px;
+            font-weight: 400;
         }
         
-        /* Autres comptes */
+        /* Autres comptes (Accueil) */
         .other-accounts {
             background-color: #fff;
             padding: 20px 16px;
@@ -232,6 +583,7 @@
             color: #666;
             margin-bottom: 20px;
             font-size: 15px;
+            font-weight: 400;
         }
         
         .add-bank-btn {
@@ -247,6 +599,8 @@
             gap: 10px;
             width: 100%;
             font-size: 16px;
+            border: none;
+            cursor: pointer;
         }
         
         /* Navigation */
@@ -273,6 +627,9 @@
             text-decoration: none;
             font-size: 12px;
             flex: 1;
+            cursor: pointer;
+            background: none;
+            border: none;
         }
         
         .nav-item.active {
@@ -289,6 +646,730 @@
             padding-bottom: 70px;
         }
         
+        /* Style pour les pages Menu, Virement, Contact, Carte */
+        .profile-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .profile-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 5px;
+        }
+        
+        .profile-account {
+            color: #666;
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+        
+        .profile-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #136b5a;
+            font-weight: 500;
+            padding: 10px;
+            background-color: #e6f0f1;
+            border-radius: 8px;
+        }
+        
+        .menu-list {
+            background-color: #fff;
+            margin-top: 8px;
+        }
+        
+        .menu-item {
+            padding: 18px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .menu-item-title {
+            font-weight: 500;
+        }
+        
+        .menu-item-icon {
+            color: #136b5a;
+        }
+        
+        .section-header {
+            padding: 20px 16px 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #136b5a;
+            background-color: #fff;
+            margin-top: 8px;
+        }
+        
+        .separator {
+            height: 1px;
+            background-color: #eaeaea;
+            margin: 10px 0;
+        }
+        
+        /* Page Virement */
+        .virement-intro {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .virement-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 5px;
+        }
+        
+        .virement-subtitle {
+            color: #666;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        
+        .wero-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            cursor: pointer;
+        }
+        
+        .wero-title {
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 5px;
+        }
+        
+        .virements-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .virements-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 10px;
+        }
+        
+        .virements-description {
+            color: #666;
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+        
+        .see-all-link {
+            color: #136b5a;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        /* Page Contact */
+        .contact-header {
+            background-color: #fff;
+            padding: 20px 16px 20px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .contact-sos {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #e53935;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .advisor-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .advisor-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 10px;
+        }
+        
+        .advisor-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 20px;
+        }
+        
+        .contact-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .contact-btn {
+            padding: 16px;
+            background-color: #e6f0f1;
+            border-radius: 10px;
+            color: #136b5a;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .messages-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .messages-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 10px;
+        }
+        
+        .no-messages {
+            color: #666;
+            font-size: 15px;
+            font-weight: 400;
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        /* Page Carte - Nouvelle carte verte */
+        .card-header {
+            background-color: #fff;
+            padding: 20px 16px 20px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-subtitle {
+            font-size: 18px;
+            font-weight: 600;
+            color: #136b5a;
+        }
+        
+        .card-info {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .card-holder {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 10px;
+        }
+        
+        .card-number {
+            color: #666;
+            font-size: 18px;
+            font-family: monospace;
+            margin-bottom: 20px;
+        }
+        
+        /* Carte verte */
+        .bank-card {
+            background: linear-gradient(135deg, #1a8c6e, #136b5a);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 16px;
+            color: white;
+            position: relative;
+            height: 220px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+        
+        .card-logo-ca {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .card-logo-cb {
+            font-size: 24px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .card-middle {
+            margin-bottom: 40px;
+        }
+        
+        .card-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .card-code {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+        
+        .card-logo-mastercard {
+            font-size: 28px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .activation-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            text-align: center;
+        }
+        
+        .activation-title {
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 10px;
+        }
+        
+        .activation-text {
+            color: #666;
+            font-size: 15px;
+            font-weight: 400;
+        }
+        
+        /* Masquer les soldes */
+        .balance-hidden {
+            filter: blur(5px);
+            user-select: none;
+        }
+        
+        /* Page RIB */
+        .rib-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .rib-account-info {
+            margin-bottom: 25px;
+        }
+        
+        .rib-account-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 8px;
+        }
+        
+        .rib-account-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 5px;
+        }
+        
+        .rib-account-number {
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .rib-detail {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .rib-detail-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .rib-detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+        
+        .copy-btn {
+            background-color: #e6f0f1;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            color: #136b5a;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .share-btn {
+            background-color: #136b5a;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        /* Page Cartes */
+        .cartes-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .cartes-header {
+            margin-bottom: 25px;
+        }
+        
+        .cartes-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 5px;
+        }
+        
+        .cartes-subtitle {
+            color: #666;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        
+        .card-item {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card-item-header {
+            margin-bottom: 15px;
+        }
+        
+        .card-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 5px;
+        }
+        
+        .card-item-type {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .card-item-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            font-family: monospace;
+            margin-bottom: 8px;
+        }
+        
+        .card-item-expiry {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .virtuelle-badge {
+            display: inline-block;
+            background-color: #e6f0f1;
+            color: #136b5a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        /* Page Wero */
+        .wero-error-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .wero-error-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 15px;
+        }
+        
+        .wero-error-text {
+            color: #666;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .criteria-list {
+            margin-bottom: 25px;
+        }
+        
+        .criterion {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .criterion-check {
+            color: #136b5a;
+            font-size: 18px;
+            margin-top: 2px;
+        }
+        
+        .criterion-text {
+            color: #333;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+        
+        .code-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .code-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .code-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #136b5a;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        
+        .contact-agency-btn {
+            background-color: #136b5a;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        /* Pages Épargne, Crédit, Assurance */
+        .offer-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .offer-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 10px;
+        }
+        
+        .offer-description {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+        
+        .offer-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #136b5a;
+            margin-bottom: 5px;
+        }
+        
+        .offer-account-number {
+            color: #666;
+            font-size: 14px;
+            font-family: monospace;
+        }
+        
+        .simulation-btn {
+            background-color: #136b5a;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            width: calc(100% - 32px);
+            margin: 20px 16px;
+        }
+        
+        .insurance-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: #fff;
+        }
+        
+        .insurance-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #e6f0f1;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #136b5a;
+            font-size: 18px;
+        }
+        
+        .insurance-text {
+            flex: 1;
+        }
+        
+        .insurance-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .insurance-time {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Page Notification Mail & SMS */
+        .notification-page {
+            background-color: #fff;
+            min-height: 100vh;
+        }
+        
+        .notification-content {
+            padding: 20px 16px;
+            line-height: 1.6;
+        }
+        
+        .notification-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #d32f2f;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .notification-text {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .notification-list {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        
+        .notification-list li {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .notification-warning {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .notification-btn {
+            background-color: #136b5a;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+        }
+        
         /* Responsive */
         @media (max-width: 500px) {
             body {
@@ -302,20 +1383,46 @@
             .section-label {
                 font-size: 12px;
             }
+            
+            .pin-keypad {
+                gap: 15px;
+            }
+            
+            .pin-key {
+                padding: 18px;
+            }
+            
+            .bank-card {
+                height: 200px;
+                padding: 20px;
+            }
+            
+            #loading-logo {
+                width: 150px;
+                height: 150px;
+                padding: 20px;
+            }
         }
         
         /* Animation légère */
-        .deposit-account, .add-bank-btn, .action-item, .section-item, .card {
+        .deposit-account, .add-bank-btn, .action-item, .section-item, .card, 
+        .menu-item, .contact-btn, .wero-section, .activation-section,
+        .card-item, .rib-detail, .share-btn, .contact-agency-btn,
+        .offer-card, .insurance-item {
             transition: transform 0.2s, box-shadow 0.2s;
         }
         
-        .deposit-account:hover, .add-bank-btn:hover, .card:hover {
+        .deposit-account:hover, .add-bank-btn:hover, .card:hover, 
+        .menu-item:hover, .contact-btn:hover, .wero-section:hover, 
+        .activation-section:hover, .card-item:hover, .rib-detail:hover,
+        .share-btn:hover, .contact-agency-btn:hover,
+        .offer-card:hover, .insurance-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         
-        /* Effets de survol avec les nouvelles couleurs */
-        .add-bank-btn:hover {
+        /* Effets de survol */
+        .add-bank-btn:hover, .copy-btn:hover {
             background-color: #d6e6e7;
         }
         
@@ -323,184 +1430,923 @@
             background-color: #d6e6e7;
         }
         
-        /* Badge de notification */
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: #e53935;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .nav-item {
-            position: relative;
-        }
-        
-        /* Animation des sections horizontales */
+        /* Animation des sections */
         .section-item:hover {
             transform: translateY(-2px);
         }
         
-        /* Ajustement pour la police Labrador */
-        .total-amount, .balance-amount {
-            letter-spacing: -0.5px;
+        /* Styles pour la police Inter */
+        h1, h2, h3, .page-title, .total-amount, .balance-amount, .profile-name,
+        .card-title, .for-you-title, .other-accounts-title, .virements-title,
+        .advisor-name, .card-holder, .virement-title, .advisor-title,
+        .messages-title, .wero-title, .activation-title, .see-all-link,
+        .contact-sos, .card-subtitle, .section-header, .rib-account-name,
+        .cartes-title, .wero-error-title, .code-value, .rib-detail-value,
+        .card-item-number, .offer-title, .offer-amount, .notification-title {
+            font-weight: 700;
         }
         
-        .greeting {
+        .total-label, .future-balance, .card-description, .other-accounts-description,
+        .virements-description, .activation-text, .no-messages, .virement-subtitle,
+        .profile-account, .account-number, .card-number, .criterion-text,
+        .wero-error-text, .cartes-subtitle, .rib-detail-title, .code-label,
+        .card-item-type, .card-item-expiry, .offer-description, .offer-account-number,
+        .notification-text, .insurance-time {
+            font-weight: 400;
+        }
+        
+        .menu-item-title, .action-label, .section-label, .nav-item span,
+        .profile-location, .contact-btn, .add-bank-btn, .pin-title,
+        .emergency-numbers, .login-region, .copy-btn, .share-btn,
+        .contact-agency-btn, .card-item-title, .virtuelle-badge,
+        .rib-account-number, .rib-account-title, .insurance-title {
+            font-weight: 500;
+        }
+        
+        .login-greeting, .pin-account {
             font-weight: 700;
         }
     </style>
 </head>
 <body>
-    <!-- En-tête simplifié sans date ni heure -->
-    <div class="header">
-        <div class="greeting">Bonjour Massinissa</div>
+    <!-- Écran de chargement avec nouveau logo Crédit Agricole -->
+    <div id="loading-screen">
+        <div id="loading-logo">
+            <img src="https://media.licdn.com/dms/image/v2/D4E0BAQG8kWFDz_KiLg/company-logo_200_200/B4EZrWf8P8GYAM-/0/1764535289200/credit_agricole_logo?e=2147483647&v=beta&t=aLDmCAcavePBkhiXRoBS9csA7DuO_9yfUJOesTAyipI" 
+                 alt="Crédit Agricole">
+        </div>
+        <div id="loading-text">Chargement...</div>
     </div>
     
-    <div class="content">
-        <!-- Sections horizontales en haut -->
-        <div class="horizontal-sections">
-            <div class="section-item">
-                <div class="section-icon">
-                    <i class="fas fa-piggy-bank"></i>
+    <!-- Page de connexion avec image de fond floutée -->
+    <div id="login-page" class="login-page" style="display: none;">
+        <div class="login-content">
+            <div class="login-header">
+                <div class="login-region">CENTRE OUEST</div>
+                <div class="login-greeting">BONJOUR MASSINISSA</div>
+                <div class="login-account">
+                    <div class="account-status"></div>
+                    <span>281......287</span>
                 </div>
-                <div class="section-label">Épargne</div>
             </div>
-            <div class="section-item">
-                <div class="section-icon">
-                    <i class="fas fa-hand-holding-usd"></i>
+            
+            <button id="login-btn" class="login-btn">Me connecter</button>
+        </div>
+        
+        <div class="emergency-numbers">Numéros d'urgence</div>
+    </div>
+    
+    <!-- Page code PIN -->
+    <div id="pin-page" class="pin-page">
+        <div class="pin-header">
+            <div class="pin-account">281......287</div>
+            <div class="pin-title">Code personnel</div>
+        </div>
+        
+        <div class="pin-dots">
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+        </div>
+        
+        <div class="pin-keypad">
+            <button class="pin-key" data-key="7">7</button>
+            <button class="pin-key" data-key="3">3</button>
+            <button class="pin-key" data-key="8">8</button>
+            <button class="pin-key" data-key="1">1</button>
+            <button class="pin-key" data-key="0">0</button>
+            <button class="pin-key" data-key="6">6</button>
+            <button class="pin-key" data-key="9">9</button>
+            <button class="pin-key" data-key="4">4</button>
+            <button class="pin-key" data-key="2">2</button>
+            <button class="pin-key delete" data-key="delete">5</button>
+            <button class="pin-key delete" data-key="backspace">✖</button>
+        </div>
+        
+        <a href="#" class="forgot-pin">J'ai oublié mon code personnel</a>
+    </div>
+    
+    <!-- Application bancaire principale -->
+    <div id="app-container" class="app-container">
+        <!-- Page Accueil -->
+        <div id="accueil" class="page active">
+            <div class="header">
+                <div class="header-content">
+                    <div class="page-title">Bonjour Massinissa</div>
+                    <div class="notification-bell" id="notification-bell-main">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge"></div>
+                    </div>
                 </div>
-                <div class="section-label">Crédits</div>
             </div>
-            <div class="section-item">
-                <div class="section-icon">
-                    <i class="fas fa-shield-alt"></i>
+            
+            <div class="content">
+                <!-- Sections horizontales en haut -->
+                <div class="horizontal-sections">
+                    <div class="section-item" data-page="epargne">
+                        <div class="section-icon">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <div class="section-label">Épargne</div>
+                    </div>
+                    <div class="section-item" data-page="credit">
+                        <div class="section-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="section-label">Crédits</div>
+                    </div>
+                    <div class="section-item" data-page="assurance">
+                        <div class="section-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="section-label">Assurances</div>
+                    </div>
                 </div>
-                <div class="section-label">Assurances</div>
+                
+                <!-- Total des comptes -->
+                <div class="total-section">
+                    <div class="total-label">Total de mes comptes</div>
+                    <div class="total-amount-container">
+                        <div id="total-amount" class="total-amount">10 953,42 €</div>
+                        <div id="total-eye" class="eye-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Compte de dépôt -->
+                <div class="deposit-account">
+                    <div class="account-title-row">
+                        <div class="account-title">Compte de Dépôt</div>
+                        <div id="deposit-eye" class="eye-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                    <div class="account-details">
+                        <div class="account-number">281*****287</div>
+                        <div class="account-balance">
+                            <span id="deposit-amount" class="balance-amount">10 953,42 €</span>
+                            <span id="future-balance" class="future-balance">Solde à venir : 10 953,42 €</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions rapides -->
+                <div class="quick-actions">
+                    <div class="action-item" data-page="rib">
+                        <div class="action-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="action-label">RIB</div>
+                    </div>
+                    <div class="action-item" data-page="cartes">
+                        <div class="action-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="action-label">Cartes</div>
+                    </div>
+                    <div class="action-item" data-page="wero">
+                        <div class="action-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="action-label">Wero</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="action-label">Ajouter</div>
+                    </div>
+                </div>
+                
+                <!-- Section Pour vous avec images de fond différentes -->
+                <div class="for-you-section">
+                    <div class="for-you-title">POUR VOUS</div>
+                    <div class="card card-balance">
+                        <div class="card-title">Le solde de votre compte en un coup d'oeil</div>
+                        <div class="card-description">Visualisez rapidement votre situation financière</div>
+                    </div>
+                    <div class="card card-plafonds">
+                        <div class="card-title">Nouveaux plafonds</div>
+                        <div class="card-description">Découvrez vos nouveaux plafonds de paiement</div>
+                    </div>
+                </div>
+                
+                <!-- Section Autres comptes -->
+                <div class="other-accounts">
+                    <div class="other-accounts-title">VOUS AVEZ D'AUTRES COMPTES ?</div>
+                    <div class="other-accounts-description">Caisse Régionale ou banque externe</div>
+                    <button class="add-bank-btn">
+                        <i class="fas fa-plus"></i> Ajouter une banque
+                    </button>
+                </div>
             </div>
         </div>
         
-        <!-- Total des comptes -->
-        <div class="total-section">
-            <div class="total-label">Total de mes comptes</div>
-            <div class="total-amount">10 953,42 €</div>
-        </div>
-        
-        <!-- Compte de dépôt -->
-        <div class="deposit-account">
-            <div class="account-title">Compte de Dépôt</div>
-            <div class="account-details">
-                <div class="account-number">FR76 3000 4000 1900 0105 4321 123</div>
-                <div class="account-balance">
-                    <span class="balance-amount">10 953,42 €</span>
-                    <span class="future-balance">Solde à venir : 10 953,42 €</span>
+        <!-- Page Menu -->
+        <div id="menu" class="page">
+            <div class="header">
+                <div class="header-content">
+                    <div class="page-title">Menu</div>
+                    <div class="notification-bell" data-page="notification">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="profile-section">
+                    <div class="profile-name">Massinissa</div>
+                    <div class="profile-name">BOUGUENNA</div>
+                    <div class="profile-account">28141454287</div>
+                    <div class="profile-location">
+                        <i class="fas fa-folder"></i> Centre Ouest
+                    </div>
+                </div>
+                
+                <div class="separator"></div>
+                
+                <div class="menu-list">
+                    <div class="menu-item">
+                        <div class="menu-item-title">Gérer mon SécuriPass</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-title">Consulter mon budget</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-title">Voir mes Documents</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                </div>
+                
+                <div class="section-header">MES SERVICES</div>
+                
+                <div class="menu-list">
+                    <div class="menu-item">
+                        <div class="menu-item-title">Paramètres</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-title">Moyens de paiement</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-title">Confidentialité et infos légales</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Actions rapides -->
-        <div class="quick-actions">
-            <div class="action-item">
-                <div class="action-icon">
-                    <i class="fas fa-file-invoice"></i>
+        <!-- Page Virement -->
+        <div id="virement" class="page">
+            <div class="header">
+                <div class="header-content">
+                    <div class="page-title">Virement</div>
+                    <div class="notification-bell" data-page="notification">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge"></div>
+                    </div>
                 </div>
-                <div class="action-label">RIB</div>
             </div>
-            <div class="action-item">
-                <div class="action-icon">
-                    <i class="fas fa-credit-card"></i>
+            
+            <div class="content">
+                <div class="virement-intro">
+                    <div class="virement-title">Faire un virement</div>
+                    <div class="virement-subtitle">Vers mes comptes ou mes bénéficiaires</div>
                 </div>
-                <div class="action-label">Cartes</div>
-            </div>
-            <div class="action-item">
-                <div class="action-icon">
-                    <i class="fas fa-bolt"></i>
+                
+                <div class="menu-list">
+                    <div class="menu-item">
+                        <div class="menu-item-title">Gérer mes plafonds</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-title">Gérer mes bénéficiaires</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-title">Virement international</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
                 </div>
-                <div class="action-label">Wero</div>
-            </div>
-            <div class="action-item">
-                <div class="action-icon">
-                    <i class="fas fa-plus"></i>
+                
+                <div class="separator"></div>
+                
+                <div class="wero-section" data-page="wero">
+                    <div class="wero-title">Envoyer ou demander de l'argent avec Wero</div>
                 </div>
-                <div class="action-label">Ajouter</div>
+                
+                <div class="virements-section">
+                    <div class="virements-title">PROCHAINS VIREMENTS PERMANENTS</div>
+                    <div class="virements-description">C'est ici que s'afficheront vos trois prochains virements permanents.</div>
+                    <a href="#" class="see-all-link">Voir tous les virements programmés</a>
+                </div>
             </div>
         </div>
         
-        <!-- Section Pour vous -->
-        <div class="for-you-section">
-            <div class="for-you-title">POUR VOUS</div>
-            <div class="card">
-                <div class="card-title">Le solde de votre compte en un coup d'oeil</div>
-                <div class="card-description">Visualisez rapidement votre situation financière</div>
+        <!-- Page Contact -->
+        <div id="contact" class="page">
+            <div class="contact-header">
+                <div class="page-title">Contact</div>
+                <div class="notification-bell" data-page="notification">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge"></div>
+                </div>
             </div>
-            <div class="card">
-                <div class="card-title">Nouveaux plafonds</div>
-                <div class="card-description">Découvrez vos nouveaux plafonds de paiement</div>
+            
+            <div class="content">
+                <div class="advisor-section">
+                    <div class="contact-sos">
+                        <i class="fas fa-headset"></i> sos
+                    </div>
+                    <div class="advisor-title">Appeler ma conseillère</div>
+                    <div class="advisor-name">Marie MAHEO</div>
+                    
+                    <div class="contact-actions">
+                        <a href="#" class="contact-btn">Écrire un message</a>
+                        <a href="#" class="contact-btn">Prendre un rendez-vous</a>
+                        <a href="#" class="contact-btn">Voir le détail agence</a>
+                    </div>
+                </div>
+                
+                <div class="messages-section">
+                    <div class="messages-title">MES DERNIERS MESSAGES</div>
+                    <div class="no-messages">
+                        Vous n'avez pas de messages pour le moment.<br>
+                        C'est ici que s'afficheront vos trois derniers messages échangés avec votre conseiller.
+                    </div>
+                </div>
             </div>
         </div>
         
-        <!-- Section Autres comptes -->
-        <div class="other-accounts">
-            <div class="other-accounts-title">VOUS AVEZ D'AUTRES COMPTES ?</div>
-            <div class="other-accounts-description">Caisse Régionale ou banque externe</div>
-            <button class="add-bank-btn">
-                <i class="fas fa-plus"></i> Ajouter une banque
+        <!-- Page Carte avec la nouvelle carte verte -->
+        <div id="carte" class="page">
+            <div class="card-header">
+                <div class="page-title">Carte</div>
+                <div class="notification-bell" data-page="notification">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-badge"></div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- Carte verte grande -->
+                <div class="bank-card">
+                    <div class="card-top">
+                        <div class="card-logo-ca">Crédit Agricole</div>
+                        <div class="card-logo-cb">CB</div>
+                    </div>
+                    <div class="card-middle">
+                        <div class="card-name">M. BOUGUENNA</div>
+                    </div>
+                    <div class="card-bottom">
+                        <div class="card-code">● ● ● ●   ● ● ● ●</div>
+                        <div class="card-logo-mastercard">Mastercard</div>
+                    </div>
+                </div>
+                
+                <div class="card-info">
+                    <div class="card-subtitle">Nouvelle carte</div>
+                    <div class="card-holder">MR M BOUGUENNA</div>
+                    <div class="card-number">... 8005</div>
+                </div>
+                
+                <div class="menu-list">
+                    <div class="menu-item">
+                        <div class="menu-item-title">Gérer ma carte</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-title">Gérer mes alertes</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-title">Voir détails carte</div>
+                        <div class="menu-item-icon">›</div>
+                    </div>
+                </div>
+                
+                <div class="activation-section">
+                    <div class="activation-title">Votre carte n'est pas encore activée</div>
+                    <div class="activation-text">
+                        Pour utiliser votre nouvelle carte, vous devez l'activer en effectuant 
+                        un retrait en distributeur ou un paiement en magasin.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page RIB -->
+        <div id="rib" class="page">
+            <div class="header">
+                <div class="header-with-back">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="page-title">Mes coordonnées bancaires</div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="rib-section">
+                    <div class="rib-account-info">
+                        <div class="rib-account-title">Compte de Dépôt</div>
+                        <div class="rib-account-name">MONSIEUR BOUGUENNA MASSINISSA</div>
+                        <div class="rib-account-number">28141454287</div>
+                    </div>
+                    
+                    <div class="separator"></div>
+                    
+                    <div class="rib-detail">
+                        <div class="rib-detail-title">IBAN</div>
+                        <div class="rib-detail-value">76 1950 FR6400 0028 1414 5428 785</div>
+                        <button class="copy-btn">
+                            <i class="far fa-copy"></i> Copier
+                        </button>
+                    </div>
+                    
+                    <div class="rib-detail">
+                        <div class="rib-detail-title">BIC / SWIFT</div>
+                        <div class="rib-detail-value">AGRIFRPP895</div>
+                        <button class="copy-btn">
+                            <i class="far fa-copy"></i> Copier
+                        </button>
+                    </div>
+                    
+                    <button class="share-btn">
+                        <i class="fas fa-share-alt"></i> Partager mon RIB
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Cartes -->
+        <div id="cartes" class="page">
+            <div class="header">
+                <div class="header-with-back">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="page-title">Mes cartes</div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="cartes-section">
+                    <div class="cartes-header">
+                        <div class="cartes-title">Monsieur Bouguenna Massinissa</div>
+                        <div class="cartes-subtitle">Compte n° 28141454287</div>
+                    </div>
+                    
+                    <div class="separator"></div>
+                    
+                    <div class="card-item-title" style="margin-bottom: 15px; color: #136b5a;">Nouvelle carte</div>
+                    
+                    <div class="card-item">
+                        <div class="card-item-header">
+                            <div class="card-item-title">Mr M Bouguenna</div>
+                            <div class="card-item-type">Mcd as dual</div>
+                        </div>
+                        <div class="card-item-number">n° 5131 63XX XXXX 8005</div>
+                        <div class="card-item-expiry">Expire fin 01/30</div>
+                    </div>
+                    
+                    <div class="virtuelle-badge">Virtuelle</div>
+                    
+                    <div class="card-item">
+                        <div class="card-item-header">
+                            <div class="card-item-title">Mr M Bouguenna</div>
+                            <div class="card-item-type">Mcd virtuelle éphémère</div>
+                        </div>
+                        <div class="card-item-number">n° 5131 37XX XXXX 7871</div>
+                        <div class="card-item-expiry">Expire fin 02/26</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Wero -->
+        <div id="wero" class="page">
+            <div class="header">
+                <div class="header-with-back">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="page-title">Wero</div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="wero-error-section">
+                    <div class="wero-error-title">Vous ne pouvez pas faire d'opérations avec Wero</div>
+                    
+                    <div class="wero-error-text">
+                        Il faut remplir les critères suivants pour bénéficier du service Wero :
+                    </div>
+                    
+                    <div class="criteria-list">
+                        <div class="criterion">
+                            <div class="criterion-check">✓</div>
+                            <div class="criterion-text">Etre majeur et capable ou mineur émancipé</div>
+                        </div>
+                        <div class="criterion">
+                            <div class="criterion-check">✓</div>
+                            <div class="criterion-text">Etre un particulier</div>
+                        </div>
+                        <div class="criterion">
+                            <div class="criterion-check">✓</div>
+                            <div class="criterion-text">Etre titulaire ou co-titulaire d'un compte de dépôt</div>
+                        </div>
+                        <div class="criterion">
+                            <div class="criterion-check">✓</div>
+                            <div class="criterion-text">Avoir l'autorisation de faire des virements en ligne</div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-section">
+                        <div class="code-label">
+                            N'hésitez pas à contacter votre agence pour en savoir plus, et transmettez-lui le code :
+                        </div>
+                        <div class="code-value">WEROP2P04</div>
+                        <div class="code-label" style="margin-top: 15px;">
+                            qui l'aidera à identifier le problème.
+                        </div>
+                    </div>
+                    
+                    <button class="contact-agency-btn">
+                        <i class="fas fa-phone-alt"></i> Contacter mon agence
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Épargne -->
+        <div id="epargne" class="page">
+            <div class="header">
+                <div class="header-with-back">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="page-title">Épargne</div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- Section Nos offres d'épargne -->
+                <div class="offer-card">
+                    <div class="offer-title">NOS OFFRES D'ÉPARGNE</div>
+                    <div class="offer-description">
+                        <strong>Livret Jeunes :</strong> disponible pour vos projets du futur
+                    </div>
+                    <div class="offer-description" style="margin-top: 10px;">
+                        <strong>PEA-Ples PMV</strong>
+                    </div>
+                </div>
+                
+                <!-- Section Compte Titre Ordinaire -->
+                <div class="offer-card">
+                    <div class="offer-title">MONSIEUR BOUGUENNA MASSINISSA</div>
+                    <div class="offer-description">Compte Titre Ordinaire</div>
+                    <div class="offer-amount">15,00 €</div>
+                    <div class="offer-account-number">28141454562</div>
+                </div>
+                
+                <!-- Section Total épargne -->
+                <div class="offer-card">
+                    <div class="offer-title">Total épargne</div>
+                    <div class="offer-amount">15,00 €</div>
+                </div>
+                
+                <!-- Section Ajouter une banque -->
+                <div class="other-accounts" style="margin-top: 20px;">
+                    <div class="other-accounts-title">VOUS AVEZ D'AUTRES COMPTES ?</div>
+                    <div class="other-accounts-description">Caisse Régionale ou banque externe</div>
+                    <button class="add-bank-btn">
+                        <i class="fas fa-plus"></i> Ajouter une banque
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Crédit -->
+        <div id="credit" class="page">
+            <div class="header">
+                <div class="header-with-back">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="page-title">Crédits</div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- Section Nos offres à votre service -->
+                <div class="offer-card">
+                    <div class="offer-title">NOS OFFRES À VOTRE SERVICE</div>
+                    <div class="offer-description">
+                        - Simulez votre crédit consommation
+                    </div>
+                    <div class="offer-description">
+                        - Simulez votre crédit immobilier
+                    </div>
+                </div>
+                
+                <!-- Section Ajouter une banque -->
+                <div class="other-accounts" style="margin-top: 20px;">
+                    <div class="other-accounts-title">VOUS AVEZ D'AUTRES COMPTES ?</div>
+                    <div class="other-accounts-description">Caisse Régionale ou banque externe</div>
+                    <button class="add-bank-btn">
+                        <i class="fas fa-plus"></i> Ajouter une banque
+                    </button>
+                </div>
+                
+                <!-- Bouton de simulation -->
+                <button class="simulation-btn">
+                    Simuler un crédit
+                </button>
+            </div>
+        </div>
+        
+        <!-- Page Assurance -->
+        <div id="assurance" class="page">
+            <div class="header">
+                <div class="header-with-back">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="page-title">Assurances</div>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- Section Nos offres à votre service -->
+                <div class="section-header" style="margin-top: 0;">NOS OFFRES À VOTRE SERVICE</div>
+                
+                <!-- Liste des assurances -->
+                <div class="insurance-item">
+                    <div class="insurance-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="insurance-text">
+                        <div class="insurance-title">Votre assurance habitation en 5 min</div>
+                    </div>
+                </div>
+                
+                <div class="insurance-item">
+                    <div class="insurance-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="insurance-text">
+                        <div class="insurance-title">Votre simulation assurance décès</div>
+                    </div>
+                </div>
+                
+                <div class="insurance-item">
+                    <div class="insurance-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="insurance-text">
+                        <div class="insurance-title">Votre assurance tous mobiles en 3 min</div>
+                    </div>
+                </div>
+                
+                <div class="insurance-item">
+                    <div class="insurance-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="insurance-text">
+                        <div class="insurance-title">Votre assurance santé en 5 min</div>
+                    </div>
+                </div>
+                
+                <div class="insurance-item">
+                    <div class="insurance-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="insurance-text">
+                        <div class="insurance-title">Votre assurance auto en 5 min</div>
+                    </div>
+                </div>
+                
+                <!-- Section Ajouter une banque -->
+                <div class="other-accounts" style="margin-top: 20px;">
+                    <div class="other-accounts-title">VOUS AVEZ D'AUTRES COMPTES ?</div>
+                    <div class="other-accounts-description">Caisse Régionale ou banque externe</div>
+                    <button class="add-bank-btn">
+                        <i class="fas fa-plus"></i> Ajouter une banque
+                    </button>
+                </div>
+                
+                <!-- Bouton de simulation -->
+                <button class="simulation-btn">
+                    Simuler une assurance
+                </button>
+            </div>
+        </div>
+        
+        <!-- Page Notification Mail & SMS -->
+        <div id="notification" class="page">
+            <div class="header">
+                <div class="header-with-back">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="page-title">Alerte sécurité</div>
+                </div>
+            </div>
+            
+            <div class="notification-content">
+                <div class="notification-title">
+                    Emails et SMS frauduleux : prudence !
+                </div>
+                
+                <div class="notification-text">
+                    Recrudescence d'emails ou SMS frauduleux usurpant l'identité de sites internet (SNCF, Amazon, Ulys, Lidl, Sécurité Sociale, ANTAI, etc.).
+                </div>
+                
+                <div class="notification-text">
+                    Ces messages peuvent être frauduleux, vérifiez l'expéditeur et en cas de doute :
+                </div>
+                
+                <div class="notification-warning">
+                    <strong>Ne cliquez pas sur le lien et ne rappelez pas le numéro.</strong>
+                </div>
+                
+                <div class="notification-text">
+                    Rapprochez-vous du site concerné avec vos moyens habituels de contact.
+                </div>
+                
+                <button class="notification-btn" id="understand-btn">
+                    J'ai compris
+                </button>
+            </div>
+        </div>
+        
+        <!-- Navigation en bas -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-page="accueil">
+                <i class="fas fa-home nav-icon"></i>
+                <span>Accueil</span>
             </button>
-        </div>
+            <button class="nav-item" data-page="carte">
+                <i class="fas fa-credit-card nav-icon"></i>
+                <span>Carte</span>
+            </button>
+            <button class="nav-item" data-page="contact">
+                <i class="fas fa-headset nav-icon"></i>
+                <span>Contact</span>
+            </button>
+            <button class="nav-item" data-page="virement">
+                <i class="fas fa-exchange-alt nav-icon"></i>
+                <span>Virement</span>
+            </button>
+            <button class="nav-item" data-page="menu">
+                <i class="fas fa-bars nav-icon"></i>
+                <span>Menu</span>
+            </button>
+        </nav>
     </div>
-    
-    <!-- Navigation en bas -->
-    <nav class="bottom-nav">
-        <a href="#" class="nav-item active">
-            <i class="fas fa-home nav-icon"></i>
-            <span>Accueil</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-credit-card nav-icon"></i>
-            <span>Carte</span>
-            <span class="notification-badge">3</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-headset nav-icon"></i>
-            <span>Contact</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-exchange-alt nav-icon"></i>
-            <span>Virement</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-bars nav-icon"></i>
-            <span>Menu</span>
-        </a>
-    </nav>
 
     <script>
-        // Simulation d'une application interactive
+        // Variables globales
+        let isBalanceVisible = true;
+        let pinCode = '';
+        const correctPIN = '7381'; // Code PIN de test
+        let previousPage = 'accueil';
+        
+        // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
-            // Animation au chargement
-            document.querySelector('.content').style.opacity = '0';
-            document.querySelector('.content').style.transform = 'translateY(20px)';
+            // Simuler un chargement de 2 secondes
+            setTimeout(function() {
+                // Masquer l'écran de chargement
+                document.getElementById('loading-screen').style.opacity = '0';
+                
+                // Après l'animation de fondu, cacher complètement l'écran de chargement
+                setTimeout(function() {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('login-page').style.display = 'flex';
+                }, 500);
+            }, 2000);
             
-            setTimeout(() => {
-                document.querySelector('.content').style.transition = 'opacity 0.5s, transform 0.5s';
-                document.querySelector('.content').style.opacity = '1';
-                document.querySelector('.content').style.transform = 'translateY(0)';
-            }, 300);
+            // Gestion de la connexion
+            document.getElementById('login-btn').addEventListener('click', function() {
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('pin-page').style.display = 'flex';
+            });
             
-            // Gestion des clics sur les éléments de navigation
+            // Gestion du clavier PIN
+            const pinKeys = document.querySelectorAll('.pin-key');
+            const pinDots = document.querySelectorAll('.pin-dot');
+            
+            pinKeys.forEach(key => {
+                key.addEventListener('click', function() {
+                    const keyValue = this.dataset.key;
+                    
+                    if (keyValue === 'backspace') {
+                        if (pinCode.length > 0) {
+                            pinCode = pinCode.slice(0, -1);
+                        }
+                    } else if (keyValue === 'delete') {
+                        pinCode = '';
+                    } else if (pinCode.length < 4) {
+                        pinCode += keyValue;
+                    }
+                    
+                    // Mettre à jour les points
+                    pinDots.forEach((dot, index) => {
+                        if (index < pinCode.length) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+                    
+                    // Vérifier le code PIN
+                    if (pinCode.length === 4) {
+                        setTimeout(() => {
+                            if (pinCode === correctPIN) {
+                                // Connexion réussie
+                                document.getElementById('pin-page').style.display = 'none';
+                                document.getElementById('app-container').style.display = 'block';
+                                
+                                // Initialiser l'application
+                                initApp();
+                            } else {
+                                // Code incorrect
+                                alert('Code PIN incorrect. Essayez à nouveau.');
+                                pinCode = '';
+                                pinDots.forEach(dot => dot.classList.remove('active'));
+                            }
+                        }, 300);
+                    }
+                });
+            });
+            
+            // Lien "J'ai oublié mon code"
+            document.querySelector('.forgot-pin').addEventListener('click', function(e) {
+                e.preventDefault();
+                // Simuler une redirection vers la page de récupération
+                document.getElementById('pin-page').style.display = 'none';
+                document.getElementById('login-page').style.display = 'flex';
+                
+                // Effet visuel
+                const loginBtn = document.getElementById('login-btn');
+                loginBtn.textContent = 'Code oublié - Contactez votre agence';
+                loginBtn.style.backgroundColor = '#ffebee';
+                loginBtn.style.color = '#c62828';
+                
+                setTimeout(() => {
+                    loginBtn.textContent = 'Me connecter';
+                    loginBtn.style.backgroundColor = 'white';
+                    loginBtn.style.color = '#136b5a';
+                }, 3000);
+            });
+        });
+        
+        // Initialisation de l'application
+        function initApp() {
+            // Navigation entre les pages
             const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
+            const backButtons = document.querySelectorAll('.back-btn');
+            
+            // Fonction pour changer de page
+            function switchPage(pageId, isBack = false) {
+                // Enregistrer la page actuelle comme précédente (sauf pour le retour)
+                if (!isBack && pageId !== previousPage) {
+                    previousPage = document.querySelector('.page.active').id;
+                }
+                
+                // Cacher toutes les pages
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Afficher la page demandée
+                document.getElementById(pageId).classList.add('active');
+                
+                // Mettre à jour la navigation active (sauf pour les pages spéciales)
+                if (['accueil', 'carte', 'contact', 'virement', 'menu'].includes(pageId)) {
+                    navItems.forEach(item => {
+                        if (item.dataset.page === pageId) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                }
+            }
+            
+            // Ajouter les événements aux boutons de navigation
             navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    navItems.forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
+                item.addEventListener('click', function() {
+                    const pageId = this.dataset.page;
+                    switchPage(pageId);
                     
                     // Animation de feedback
                     this.style.transform = 'scale(0.95)';
@@ -510,21 +2356,18 @@
                 });
             });
             
-            // Simulation d'un clic sur "Ajouter une banque"
-            document.querySelector('.add-bank-btn').addEventListener('click', function() {
-                alert('Fonctionnalité d\'ajout de banque - Cette fonctionnalité serait implémentée dans une application réelle.');
-                this.style.backgroundColor = '#d6e6e7';
-                setTimeout(() => {
-                    this.style.backgroundColor = '#e6f0f1';
-                }, 300);
+            // Gestion des boutons retour
+            backButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    switchPage(previousPage, true);
+                });
             });
             
-            // Simulation d'un clic sur les sections horizontales
-            const sectionItems = document.querySelectorAll('.section-item');
-            sectionItems.forEach((item, index) => {
-                item.addEventListener('click', function() {
-                    const labels = ['Épargne', 'Crédits', 'Assurances'];
-                    alert(`Ouverture de la section: "${labels[index]}" - Cette fonctionnalité serait implémentée dans une application réelle.`);
+            // Gestion des sections horizontales (Épargne, Crédits, Assurances)
+            document.querySelectorAll('[data-page="epargne"], [data-page="credit"], [data-page="assurance"]').forEach(element => {
+                element.addEventListener('click', function() {
+                    const pageId = this.dataset.page;
+                    switchPage(pageId);
                     
                     // Effet visuel
                     const icon = this.querySelector('.section-icon');
@@ -537,27 +2380,177 @@
                 });
             });
             
+            // Gestion des liens vers les pages RIB, Cartes et Wero
+            document.querySelectorAll('[data-page="rib"]').forEach(element => {
+                element.addEventListener('click', function() {
+                    switchPage('rib');
+                });
+            });
+            
+            document.querySelectorAll('[data-page="cartes"]').forEach(element => {
+                element.addEventListener('click', function() {
+                    switchPage('cartes');
+                });
+            });
+            
+            document.querySelectorAll('[data-page="wero"]').forEach(element => {
+                element.addEventListener('click', function() {
+                    switchPage('wero');
+                });
+            });
+            
+            // Gestion des notifications (cloche)
+            document.querySelectorAll('.notification-bell').forEach(bell => {
+                bell.addEventListener('click', function() {
+                    // Vérifier si c'est une cloche spécifique à la page notification
+                    if (this.dataset.page === 'notification') {
+                        switchPage('notification');
+                    } else {
+                        // Pour les autres cloches, afficher la page notification
+                        switchPage('notification');
+                    }
+                });
+            });
+            
+            // Gestion du bouton "J'ai compris" dans la page notification
+            document.getElementById('understand-btn').addEventListener('click', function() {
+                switchPage(previousPage, true);
+            });
+            
+            // Gestion du masquage des soldes
+            const totalEye = document.getElementById('total-eye');
+            const depositEye = document.getElementById('deposit-eye');
+            const totalAmount = document.getElementById('total-amount');
+            const depositAmount = document.getElementById('deposit-amount');
+            const futureBalance = document.getElementById('future-balance');
+            
+            function toggleBalances() {
+                isBalanceVisible = !isBalanceVisible;
+                
+                if (isBalanceVisible) {
+                    // Afficher les soldes
+                    totalAmount.textContent = '10 953,42 €';
+                    depositAmount.textContent = '10 953,42 €';
+                    futureBalance.textContent = 'Solde à venir : 10 953,42 €';
+                    
+                    // Changer les icônes
+                    totalEye.innerHTML = '<i class="fas fa-eye"></i>';
+                    depositEye.innerHTML = '<i class="fas fa-eye"></i>';
+                    
+                    // Enlever le flou
+                    totalAmount.classList.remove('balance-hidden');
+                    depositAmount.classList.remove('balance-hidden');
+                    futureBalance.classList.remove('balance-hidden');
+                } else {
+                    // Masquer les soldes
+                    totalAmount.textContent = '•••••• €';
+                    depositAmount.textContent = '•••••• €';
+                    futureBalance.textContent = 'Solde à venir : •••••• €';
+                    
+                    // Changer les icônes
+                    totalEye.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                    depositEye.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                    
+                    // Ajouter le flou
+                    totalAmount.classList.add('balance-hidden');
+                    depositAmount.classList.add('balance-hidden');
+                    futureBalance.classList.add('balance-hidden');
+                }
+            }
+            
+            // Événements pour les icônes œil
+            totalEye.addEventListener('click', toggleBalances);
+            depositEye.addEventListener('click', toggleBalances);
+            
+            // Gestion des boutons Copier
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const value = this.parentElement.querySelector('.rib-detail-value').textContent;
+                    navigator.clipboard.writeText(value)
+                        .then(() => {
+                            const originalText = this.innerHTML;
+                            this.innerHTML = '<i class="fas fa-check"></i> Copié';
+                            this.style.backgroundColor = '#136b5a';
+                            this.style.color = 'white';
+                            
+                            setTimeout(() => {
+                                this.innerHTML = originalText;
+                                this.style.backgroundColor = '#e6f0f1';
+                                this.style.color = '#136b5a';
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            console.log('Erreur lors de la copie: ' + err);
+                            // Fallback pour les navigateurs qui ne supportent pas clipboard API
+                            const tempInput = document.createElement('input');
+                            tempInput.value = value;
+                            document.body.appendChild(tempInput);
+                            tempInput.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(tempInput);
+                            
+                            const originalText = this.innerHTML;
+                            this.innerHTML = '<i class="fas fa-check"></i> Copié';
+                            this.style.backgroundColor = '#136b5a';
+                            this.style.color = 'white';
+                            
+                            setTimeout(() => {
+                                this.innerHTML = originalText;
+                                this.style.backgroundColor = '#e6f0f1';
+                                this.style.color = '#136b5a';
+                            }, 2000);
+                        });
+                });
+            });
+            
+            // Gestion des boutons Partager RIB et Contacter agence
+            document.querySelector('.share-btn').addEventListener('click', function() {
+                // Effet visuel seulement
+                this.style.backgroundColor = '#0a5a4a';
+                setTimeout(() => {
+                    this.style.backgroundColor = '#136b5a';
+                }, 300);
+            });
+            
+            document.querySelector('.contact-agency-btn').addEventListener('click', function() {
+                // Effet visuel seulement
+                this.style.backgroundColor = '#0a5a4a';
+                setTimeout(() => {
+                    this.style.backgroundColor = '#136b5a';
+                }, 300);
+            });
+            
+            // Simulation d'un clic sur "Ajouter une banque"
+            document.querySelectorAll('.add-bank-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Effet visuel seulement
+                    this.style.backgroundColor = '#d6e6e7';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '#e6f0f1';
+                    }, 300);
+                });
+            });
+            
             // Simulation d'un clic sur les actions rapides
             const actionItems = document.querySelectorAll('.action-item');
             actionItems.forEach(item => {
                 item.addEventListener('click', function() {
-                    const label = this.querySelector('.action-label').textContent;
-                    alert(`Ouverture de: "${label}" - Cette fonctionnalité serait implémentée dans une application réelle.`);
-                    
-                    // Effet visuel
-                    const icon = this.querySelector('.action-icon');
-                    icon.style.backgroundColor = '#136b5a';
-                    icon.style.color = '#ffffff';
-                    setTimeout(() => {
-                        icon.style.backgroundColor = '#e6f0f1';
-                        icon.style.color = '#136b5a';
-                    }, 300);
+                    // Effet visuel seulement pour le bouton "Ajouter"
+                    if (!this.dataset.page) {
+                        const icon = this.querySelector('.action-icon');
+                        icon.style.backgroundColor = '#136b5a';
+                        icon.style.color = '#ffffff';
+                        setTimeout(() => {
+                            icon.style.backgroundColor = '#e6f0f1';
+                            icon.style.color = '#136b5a';
+                        }, 300);
+                    }
                 });
             });
             
             // Effet pour le compte de dépôt
             document.querySelector('.deposit-account').addEventListener('click', function() {
-                alert('Détails du compte de dépôt - Cette fonctionnalité serait implémentée dans une application réelle.');
+                // Effet visuel seulement
                 this.style.boxShadow = '0 4px 12px rgba(19, 107, 90, 0.2)';
                 setTimeout(() => {
                     this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.03)';
@@ -568,40 +2561,103 @@
             const cards = document.querySelectorAll('.card');
             cards.forEach(card => {
                 card.addEventListener('click', function() {
-                    const title = this.querySelector('.card-title').textContent;
-                    alert(`Ouverture de: "${title}" - Cette fonctionnalité serait implémentée dans une application réelle.`);
-                    
+                    // Effet visuel seulement
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 300);
+                });
+            });
+            
+            // Effet pour les éléments du menu
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Effet visuel seulement
                     this.style.backgroundColor = '#e6f0f1';
                     setTimeout(() => {
-                        this.style.backgroundColor = '#f8f9fa';
+                        this.style.backgroundColor = '#ffffff';
+                    }, 300);
+                });
+            });
+            
+            // Effet pour les boutons de contact
+            const contactBtns = document.querySelectorAll('.contact-btn');
+            contactBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Effet visuel seulement
+                    this.style.backgroundColor = '#d6e6e7';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '#e6f0f1';
+                    }, 300);
+                });
+            });
+            
+            // Effet pour les cartes d'offres
+            const offerCards = document.querySelectorAll('.offer-card');
+            offerCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Effet visuel seulement
+                    this.style.boxShadow = '0 4px 12px rgba(19, 107, 90, 0.2)';
+                    setTimeout(() => {
+                        this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+                    }, 300);
+                });
+            });
+            
+            // Effet pour les assurances
+            const insuranceItems = document.querySelectorAll('.insurance-item');
+            insuranceItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Effet visuel seulement
+                    this.style.backgroundColor = '#e6f0f1';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '#ffffff';
+                    }, 300);
+                });
+            });
+            
+            // Gestion des boutons de simulation
+            document.querySelectorAll('.simulation-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Effet visuel seulement
+                    this.style.backgroundColor = '#0a5a4a';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '#136b5a';
                     }, 300);
                 });
             });
             
             // Simulation d'un changement de solde dynamique
             let balance = 10953.42;
-            let futureBalance = 10953.42;
             
             // Ajouter un effet visuel lors du clic sur les montants
-            const balanceElements = document.querySelectorAll('.balance-amount, .total-amount');
+            const balanceElements = document.querySelectorAll('.total-amount, .balance-amount');
             balanceElements.forEach(element => {
                 element.addEventListener('click', function() {
-                    const newBalance = (balance + 100).toFixed(2);
-                    const formattedBalance = newBalance.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-                    
-                    // Animation de transition
-                    this.style.transform = 'scale(1.05)';
-                    this.style.color = '#0a8c6c';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                        this.style.color = '#136b5a';
-                    }, 300);
-                    
-                    // Simuler un dépôt
-                    alert(`Simulation de dépôt: +100€\nNouveau solde: ${formattedBalance} €`);
+                    if (isBalanceVisible) {
+                        // Animation de transition seulement
+                        this.style.transform = 'scale(1.05)';
+                        this.style.color = '#0a8c6c';
+                        setTimeout(() => {
+                            this.style.transform = 'scale(1)';
+                            this.style.color = '#136b5a';
+                        }, 300);
+                    }
                 });
             });
-        });
+            
+            // Animation au chargement de l'application
+            document.querySelector('.content').style.opacity = '0';
+            document.querySelector('.content').style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.querySelector('.content').style.transition = 'opacity 0.5s, transform 0.5s';
+                document.querySelector('.content').style.opacity = '1';
+                document.querySelector('.content').style.transform = 'translateY(0)';
+            }, 300);
+        }
     </script>
 </body>
 </html>
