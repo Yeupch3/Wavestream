@@ -1,340 +1,607 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WaveStream</title>
-    
-    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet" />
-    
+    <title>Ma Banque Mobile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Labrador:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #e50914; /* Rouge style Netflix */
-            --dark: #141414;
-            --gray: #333;
-            --text: #fff;
-        }
-
-        {
-              "background_color": "#ffffff",
-              "dir": "ltr",
-  "display": "standalone",
-  "name": "yeupch3.github",
-  "orientation": "any",
-  "scope": "/",
-  "short_name": "yeupch3.github",
-  "start_url": "/",
-  "theme_color": "#ffffff"
-        }
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--dark);
-            color: var(--text);
+        * {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        /* En-tête */
-        header {
-            background-color: #000;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
-
-        h1 { margin: 0; font-size: 1.2rem; color: var(--primary); }
-
-        /* Conteneur principal */
-        .main-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* Zone du Lecteur Vidéo */
-        .video-section {
-            flex: 2;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .video-js {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Zone de la Playlist */
-        .playlist-section {
-            flex: 1;
-            background-color: #1f1f1f;
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid var(--gray);
-            min-width: 300px;
-            max-width: 400px;
-        }
-
-        /* Contrôles de fichier et recherche */
-        .controls {
-            padding: 15px;
-            background-color: #2b2b2b;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        .btn-upload {
-            display: block;
-            background-color: var(--primary);
-            color: white;
-            text-align: center;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: none;
-            background: #444;
-            color: white;
-            box-sizing: border-box; /* Important pour ne pas dépasser */
-        }
-
-        /* Liste des chaînes */
-        .channel-list {
-            flex: 1;
-            overflow-y: auto;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .channel-item {
-            padding: 15px;
-            border-bottom: 1px solid var(--gray);
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-        }
-
-        .channel-item:hover {
-            background-color: #333;
-        }
-
-        .channel-item.active {
-            background-color: var(--gray);
-            border-left: 4px solid var(--primary);
-        }
-
-        .channel-icon {
-            width: 40px;
-            height: 40px;
-            background: #000;
-            border-radius: 50%;
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: #aaa;
-            overflow: hidden;
+            box-sizing: border-box;
+            font-family: "Labrador", -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
-        .channel-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            overflow-x: hidden;
+            position: relative;
         }
-
-        /* Responsive : Mobile */
-        @media (max-width: 768px) {
-            .main-container {
-                flex-direction: column;
+        
+        /* En-tête simplifié */
+        .header {
+            background-color: #ffffff;
+            padding: 28px 16px 16px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .greeting {
+            font-size: 28px;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        /* Sections horizontales en haut */
+        .horizontal-sections {
+            display: flex;
+            background-color: #fff;
+            padding: 16px;
+            margin-top: 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .section-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 8px;
+        }
+        
+        .section-icon {
+            width: 44px;
+            height: 44px;
+            background-color: #e6f0f1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: #136b5a;
+            font-size: 18px;
+        }
+        
+        .section-label {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        /* Total des comptes */
+        .total-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .total-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .total-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #136b5a;
+        }
+        
+        /* Compte de dépôt */
+        .deposit-account {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        
+        .account-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #136b5a;
+            margin-bottom: 8px;
+        }
+        
+        .account-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .account-number {
+            color: #666;
+            font-size: 15px;
+            font-family: monospace;
+        }
+        
+        .account-balance {
+            text-align: right;
+        }
+        
+        .balance-amount {
+            font-size: 26px;
+            font-weight: 700;
+            color: #136b5a;
+            display: block;
+        }
+        
+        .future-balance {
+            color: #666;
+            font-size: 14px;
+            display: block;
+            margin-top: 4px;
+        }
+        
+        /* Actions rapides */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px 16px;
+            background-color: #fff;
+            margin-top: 8px;
+        }
+        
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 0;
+        }
+        
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #e6f0f1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            color: #136b5a;
+            font-size: 20px;
+        }
+        
+        .action-label {
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* Section Pour vous */
+        .for-you-section {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+        }
+        
+        .for-you-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #136b5a;
+        }
+        
+        .card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #136b5a;
+        }
+        
+        .card-description {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Autres comptes */
+        .other-accounts {
+            background-color: #fff;
+            padding: 20px 16px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .other-accounts-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #136b5a;
+        }
+        
+        .other-accounts-description {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        
+        .add-bank-btn {
+            background-color: #e6f0f1;
+            border: 1px dashed #aaa;
+            border-radius: 10px;
+            padding: 16px;
+            color: #136b5a;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            font-size: 16px;
+        }
+        
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #eaeaea;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+            text-decoration: none;
+            font-size: 12px;
+            flex: 1;
+        }
+        
+        .nav-item.active {
+            color: #136b5a;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        /* Ajustement pour l'espace de la navigation */
+        .content {
+            padding-bottom: 70px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 500px) {
+            body {
+                box-shadow: none;
             }
-            .video-section {
-                flex: none;
-                height: 40vh; /* La vidéo prend 40% de l'écran en haut */
+            
+            .horizontal-sections {
+                padding: 12px 8px;
             }
-            .playlist-section {
-                flex: 1;
-                max-width: 100%;
-                min-width: 100%;
+            
+            .section-label {
+                font-size: 12px;
             }
+        }
+        
+        /* Animation légère */
+        .deposit-account, .add-bank-btn, .action-item, .section-item, .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .deposit-account:hover, .add-bank-btn:hover, .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        /* Effets de survol avec les nouvelles couleurs */
+        .add-bank-btn:hover {
+            background-color: #d6e6e7;
+        }
+        
+        .action-icon:hover, .section-icon:hover {
+            background-color: #d6e6e7;
+        }
+        
+        /* Badge de notification */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e53935;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        /* Animation des sections horizontales */
+        .section-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Ajustement pour la police Labrador */
+        .total-amount, .balance-amount {
+            letter-spacing: -0.5px;
+        }
+        
+        .greeting {
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
-
-    <header>
-        <h1>WaveStream🏴‍☠️</h1>
-        </header>
-
-    <div class="main-container">
-        <div class="video-section">
-            <video
-                id="my-player"
-                class="video-js vjs-big-play-centered vjs-theme-city"
-                controls
-                preload="auto"
-                data-setup='{"fluid": false}'
-                x-webkit-airplay="allow" 
-                poster="https://via.placeholder.com/1280x720/000000/FFFFFF/?text=Veuillez+charger+une+playlist"
-            >
-                <p class="vjs-no-js">
-                    Pour voir cette vidéo, activez JavaScript.
-                </p>
-            </video>
-        </div>
-
-        <div class="playlist-section">
-            <div class="controls">
-                <label for="m3uFile" class="btn-upload">📂 Ouvrir fichier Playlist (M3U)</label>
-                <input type="file" id="m3uFile" accept=".m3u, .m3u8">
-                <input type="text" id="searchInput" class="search-box" placeholder="Rechercher une chaîne...">
+    <!-- En-tête simplifié sans date ni heure -->
+    <div class="header">
+        <div class="greeting">Bonjour Massinissa</div>
+    </div>
+    
+    <div class="content">
+        <!-- Sections horizontales en haut -->
+        <div class="horizontal-sections">
+            <div class="section-item">
+                <div class="section-icon">
+                    <i class="fas fa-piggy-bank"></i>
+                </div>
+                <div class="section-label">Épargne</div>
             </div>
-            <ul id="channelList" class="channel-list">
-                <li style="padding:20px; text-align:center; color:#777;">Aucune playlist chargée.</li>
-            </ul>
+            <div class="section-item">
+                <div class="section-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <div class="section-label">Crédits</div>
+            </div>
+            <div class="section-item">
+                <div class="section-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="section-label">Assurances</div>
+            </div>
+        </div>
+        
+        <!-- Total des comptes -->
+        <div class="total-section">
+            <div class="total-label">Total de mes comptes</div>
+            <div class="total-amount">10 953,42 €</div>
+        </div>
+        
+        <!-- Compte de dépôt -->
+        <div class="deposit-account">
+            <div class="account-title">Compte de Dépôt</div>
+            <div class="account-details">
+                <div class="account-number">FR76 3000 4000 1900 0105 4321 123</div>
+                <div class="account-balance">
+                    <span class="balance-amount">10 953,42 €</span>
+                    <span class="future-balance">Solde à venir : 10 953,42 €</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actions rapides -->
+        <div class="quick-actions">
+            <div class="action-item">
+                <div class="action-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="action-label">RIB</div>
+            </div>
+            <div class="action-item">
+                <div class="action-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="action-label">Cartes</div>
+            </div>
+            <div class="action-item">
+                <div class="action-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="action-label">Wero</div>
+            </div>
+            <div class="action-item">
+                <div class="action-icon">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="action-label">Ajouter</div>
+            </div>
+        </div>
+        
+        <!-- Section Pour vous -->
+        <div class="for-you-section">
+            <div class="for-you-title">POUR VOUS</div>
+            <div class="card">
+                <div class="card-title">Le solde de votre compte en un coup d'oeil</div>
+                <div class="card-description">Visualisez rapidement votre situation financière</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Nouveaux plafonds</div>
+                <div class="card-description">Découvrez vos nouveaux plafonds de paiement</div>
+            </div>
+        </div>
+        
+        <!-- Section Autres comptes -->
+        <div class="other-accounts">
+            <div class="other-accounts-title">VOUS AVEZ D'AUTRES COMPTES ?</div>
+            <div class="other-accounts-description">Caisse Régionale ou banque externe</div>
+            <button class="add-bank-btn">
+                <i class="fas fa-plus"></i> Ajouter une banque
+            </button>
         </div>
     </div>
-
-    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+    
+    <!-- Navigation en bas -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fas fa-home nav-icon"></i>
+            <span>Accueil</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-credit-card nav-icon"></i>
+            <span>Carte</span>
+            <span class="notification-badge">3</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-headset nav-icon"></i>
+            <span>Contact</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-exchange-alt nav-icon"></i>
+            <span>Virement</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-bars nav-icon"></i>
+            <span>Menu</span>
+        </a>
+    </nav>
 
     <script>
-        // Initialisation des variables
-        const fileInput = document.getElementById('m3uFile');
-        const channelList = document.getElementById('channelList');
-        const searchInput = document.getElementById('searchInput');
-        let player = videojs('my-player');
-        let allChannels = [];
-
-        // 1. Lecture du fichier M3U
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const content = e.target.result;
-                parseM3U(content);
-            };
-            reader.readAsText(file);
-        });
-
-        // 2. Parser le contenu M3U (Optimisé)
-        function parseM3U(data) {
-            allChannels = [];
-            const lines = data.split('\n');
-            let currentChannel = {};
-
-            for (let line of lines) {
-                line = line.trim();
-                if (line.startsWith('#EXTINF:')) {
-                    // Extraction du nom et logos si dispo
-                    const info = line.split(',');
-                    currentChannel.name = info[info.length - 1] || 'Chaîne inconnue';
+        // Simulation d'une application interactive
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation au chargement
+            document.querySelector('.content').style.opacity = '0';
+            document.querySelector('.content').style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.querySelector('.content').style.transition = 'opacity 0.5s, transform 0.5s';
+                document.querySelector('.content').style.opacity = '1';
+                document.querySelector('.content').style.transform = 'translateY(0)';
+            }, 300);
+            
+            // Gestion des clics sur les éléments de navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
                     
-                    // Tentative d'extraction de logo (tvg-logo)
-                    const logoMatch = line.match(/tvg-logo="([^"]*)"/);
-                    currentChannel.logo = logoMatch ? logoMatch[1] : null;
-
-                } else if (line.startsWith('http')) {
-                    currentChannel.url = line;
-                    allChannels.push({...currentChannel});
-                    currentChannel = {}; // Reset pour la prochaine
-                }
-            }
-            
-            renderList(allChannels);
-            
-            // Lancer la première chaîne automatiquement si dispo
-            if(allChannels.length > 0) {
-                loadChannel(allChannels[0]);
-            }
-        }
-
-        // 3. Affichage de la liste (Performant)
-        function renderList(channels) {
-            channelList.innerHTML = '';
-            
-            // Limite d'affichage pour éviter le lag si 10,000 chaines (Virtualisation simple)
-            // Ici on affiche tout mais le filtrage est rapide.
-            
-            if (channels.length === 0) {
-                channelList.innerHTML = '<li style="padding:20px; text-align:center;">Aucun résultat.</li>';
-                return;
-            }
-
-            const fragment = document.createDocumentFragment();
-
-            channels.forEach((channel, index) => {
-                const li = document.createElement('li');
-                li.className = 'channel-item';
-                li.onclick = () => loadChannel(channel, li);
-                
-                // Gestion icone
-                let iconHtml = '<div class="channel-icon">TV</div>';
-                if(channel.logo) {
-                    iconHtml = `<div class="channel-icon"><img src="${channel.logo}" onerror="this.style.display='none'"></div>`;
-                }
-
-                li.innerHTML = `
-                    ${iconHtml}
-                    <span>${channel.name}</span>
-                `;
-                fragment.appendChild(li);
-            });
-
-            channelList.appendChild(fragment);
-        }
-
-        // 4. Système de recherche (Filtre instantané)
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = allChannels.filter(ch => ch.name.toLowerCase().includes(term));
-            renderList(filtered);
-        });
-
-        // 5. Chargement de la vidéo (Optimisation buffer)
-        function loadChannel(channel, element) {
-            // Mise à jour visuelle (active class)
-            const active = document.querySelector('.channel-item.active');
-            if(active) active.classList.remove('active');
-            if(element) element.classList.add('active');
-
-            // Chargement Video.js
-            player.src({
-                src: channel.url,
-                type: 'application/x-mpegURL' // Type standard pour HLS (m3u8)
+                    // Animation de feedback
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
             });
             
-            player.play().catch(e => console.log("Lecture auto bloquée par le navigateur, clic requis."));
-        }
-
-        // Gestion des erreurs
-        player.on('error', function() {
-            console.log("Erreur de flux, tentative de reconnexion...");
-            // Logique de retry possible ici
+            // Simulation d'un clic sur "Ajouter une banque"
+            document.querySelector('.add-bank-btn').addEventListener('click', function() {
+                alert('Fonctionnalité d\'ajout de banque - Cette fonctionnalité serait implémentée dans une application réelle.');
+                this.style.backgroundColor = '#d6e6e7';
+                setTimeout(() => {
+                    this.style.backgroundColor = '#e6f0f1';
+                }, 300);
+            });
+            
+            // Simulation d'un clic sur les sections horizontales
+            const sectionItems = document.querySelectorAll('.section-item');
+            sectionItems.forEach((item, index) => {
+                item.addEventListener('click', function() {
+                    const labels = ['Épargne', 'Crédits', 'Assurances'];
+                    alert(`Ouverture de la section: "${labels[index]}" - Cette fonctionnalité serait implémentée dans une application réelle.`);
+                    
+                    // Effet visuel
+                    const icon = this.querySelector('.section-icon');
+                    icon.style.backgroundColor = '#136b5a';
+                    icon.style.color = '#ffffff';
+                    setTimeout(() => {
+                        icon.style.backgroundColor = '#e6f0f1';
+                        icon.style.color = '#136b5a';
+                    }, 300);
+                });
+            });
+            
+            // Simulation d'un clic sur les actions rapides
+            const actionItems = document.querySelectorAll('.action-item');
+            actionItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const label = this.querySelector('.action-label').textContent;
+                    alert(`Ouverture de: "${label}" - Cette fonctionnalité serait implémentée dans une application réelle.`);
+                    
+                    // Effet visuel
+                    const icon = this.querySelector('.action-icon');
+                    icon.style.backgroundColor = '#136b5a';
+                    icon.style.color = '#ffffff';
+                    setTimeout(() => {
+                        icon.style.backgroundColor = '#e6f0f1';
+                        icon.style.color = '#136b5a';
+                    }, 300);
+                });
+            });
+            
+            // Effet pour le compte de dépôt
+            document.querySelector('.deposit-account').addEventListener('click', function() {
+                alert('Détails du compte de dépôt - Cette fonctionnalité serait implémentée dans une application réelle.');
+                this.style.boxShadow = '0 4px 12px rgba(19, 107, 90, 0.2)';
+                setTimeout(() => {
+                    this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.03)';
+                }, 300);
+            });
+            
+            // Effet pour les cartes "Pour vous"
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const title = this.querySelector('.card-title').textContent;
+                    alert(`Ouverture de: "${title}" - Cette fonctionnalité serait implémentée dans une application réelle.`);
+                    
+                    this.style.backgroundColor = '#e6f0f1';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '#f8f9fa';
+                    }, 300);
+                });
+            });
+            
+            // Simulation d'un changement de solde dynamique
+            let balance = 10953.42;
+            let futureBalance = 10953.42;
+            
+            // Ajouter un effet visuel lors du clic sur les montants
+            const balanceElements = document.querySelectorAll('.balance-amount, .total-amount');
+            balanceElements.forEach(element => {
+                element.addEventListener('click', function() {
+                    const newBalance = (balance + 100).toFixed(2);
+                    const formattedBalance = newBalance.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                    
+                    // Animation de transition
+                    this.style.transform = 'scale(1.05)';
+                    this.style.color = '#0a8c6c';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                        this.style.color = '#136b5a';
+                    }, 300);
+                    
+                    // Simuler un dépôt
+                    alert(`Simulation de dépôt: +100€\nNouveau solde: ${formattedBalance} €`);
+                });
+            });
         });
-
     </script>
 </body>
 </html>
-
